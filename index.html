@@ -6,15 +6,16 @@
   <title>A Special Question</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Playfair+Display:wght@600;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --glass: rgba(255, 255, 255, 0.22);
-      --glass-border: rgba(255, 255, 255, 0.38);
+      --glass-border: rgba(255, 255, 255, 0.4);
       --accent: #ff5fa2;
       --accent-deep: #ff2b7a;
-      --muted: rgba(255, 255, 255, 0.6);
-      --shadow: 0 20px 50px rgba(78, 27, 88, 0.25);
+      --shadow-dark: rgba(140, 90, 115, 0.35);
+      --shadow-light: rgba(255, 255, 255, 0.7);
+      --text: #2d1b2f;
     }
 
     * {
@@ -28,47 +29,51 @@
       align-items: center;
       justify-content: center;
       font-family: "Quicksand", sans-serif;
-      background: linear-gradient(135deg, #ffd2e9 0%, #cdb7ff 100%);
-      color: #2d1b2f;
+      background: linear-gradient(135deg, #e7b5c4 0%, #f4e0c5 100%);
+      color: var(--text);
       overflow: hidden;
       position: relative;
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Ctext x='2' y='24' font-size='22'%3E%E2%9D%A4%EF%B8%8F%3C/text%3E%3C/svg%3E") 8 24, auto;
     }
 
     .bg-blob {
       position: absolute;
-      width: 380px;
-      height: 380px;
+      width: 360px;
+      height: 360px;
       border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0));
-      filter: blur(8px);
-      opacity: 0.7;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0));
+      filter: blur(12px);
+      opacity: 0.65;
       z-index: 0;
       animation: float 12s ease-in-out infinite;
     }
 
     .bg-blob.blob-1 {
-      top: -120px;
-      left: -80px;
+      top: -140px;
+      left: -120px;
     }
 
     .bg-blob.blob-2 {
       bottom: -160px;
-      right: -60px;
+      right: -80px;
       animation-delay: -4s;
     }
 
     .card {
       position: relative;
       width: min(520px, 92vw);
-      padding: 38px 36px 72px;
+      padding: 40px 36px 60px;
       background: var(--glass);
       border: 1px solid var(--glass-border);
       border-radius: 28px;
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
-      box-shadow: var(--shadow);
+      box-shadow:
+        24px 24px 60px var(--shadow-dark),
+        -20px -20px 50px var(--shadow-light);
       z-index: 1;
       animation: popIn 0.8s ease;
+      transform: rotate(-1deg);
     }
 
     .card-content {
@@ -91,7 +96,7 @@
     .buttons {
       position: relative;
       height: 120px;
-      margin-top: 10px;
+      margin-top: 8px;
     }
 
     button {
@@ -104,71 +109,46 @@
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
+    button:hover {
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Ctext x='2' y='24' font-size='22'%3E%F0%9F%92%96%3C/text%3E%3C/svg%3E") 8 24, pointer;
+    }
+
     #yesBtn {
       background: linear-gradient(135deg, var(--accent), var(--accent-deep));
       color: white;
       box-shadow: 0 12px 24px rgba(255, 70, 137, 0.35);
+      --yes-scale: 1;
+      transform: scale(var(--yes-scale));
     }
 
     #yesBtn:hover {
-      transform: translateY(-2px) scale(1.02);
+      transform: translateY(-2px) scale(var(--yes-scale));
     }
 
     #noBtn {
       position: absolute;
       left: 65%;
-      top: 20px;
+      top: 18px;
       background: rgba(255, 255, 255, 0.35);
       color: #3b2a3f;
-      border: 1px solid rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.6);
       box-shadow: 0 10px 20px rgba(60, 20, 80, 0.15);
     }
 
-    .mute-btn {
-      position: absolute;
-      right: 16px;
-      bottom: 16px;
-      padding: 6px 12px;
-      font-size: 0.85rem;
-      background: rgba(255, 255, 255, 0.4);
-      color: #3b2a3f;
-      border: 1px solid rgba(255, 255, 255, 0.55);
-      border-radius: 999px;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-
-    .mute-btn:hover {
-      background: rgba(255, 255, 255, 0.6);
-    }
-
-    .heart-icon {
-      width: 120px;
-      height: 120px;
-      margin: 0 auto 18px;
-      filter: drop-shadow(0 12px 22px rgba(255, 71, 123, 0.35));
-      animation: pulse 1.6s ease-in-out infinite;
-    }
-
-    .yes-message {
-      font-size: 1.15rem;
-      margin: 0;
-      color: rgba(45, 27, 47, 0.85);
+    .final-message {
+      font-family: "Dancing Script", cursive;
+      font-size: clamp(2.2rem, 4vw, 3rem);
+      color: rgba(45, 27, 47, 0.9);
     }
 
     @keyframes popIn {
-      0% { transform: translateY(12px) scale(0.96); opacity: 0; }
-      100% { transform: translateY(0) scale(1); opacity: 1; }
+      0% { transform: translateY(12px) scale(0.96) rotate(-1deg); opacity: 0; }
+      100% { transform: translateY(0) scale(1) rotate(-1deg); opacity: 1; }
     }
 
     @keyframes float {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(18px); }
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
     }
   </style>
 </head>
@@ -185,7 +165,6 @@
         <button id="noBtn">No</button>
       </div>
     </div>
-    <button class="mute-btn" id="muteToggle">Mute</button>
   </div>
 
   <audio id="bgMusic" preload="auto" playsinline loop style="display: none;">
@@ -196,22 +175,31 @@
   <script>
     const noBtn = document.getElementById('noBtn');
     const yesBtn = document.getElementById('yesBtn');
-    const card = document.getElementById('card');
     const cardContent = document.getElementById('cardContent');
     const buttonArea = document.getElementById('buttonArea');
 
+    console.log(
+      '%cHey! No cheating! Just click Yes already ;)',
+      'color: #ff4d8d; font-size: 16px; font-family: "Dancing Script", cursive;'
+    );
+
     const funnyNoTexts = [
-      'Not today 😅',
-      'Try again?',
-      'Nope, lol',
-      'Swipe right',
+      'Nice try!',
+      'Wrong button!',
+      'Think again!',
       'Almost!',
-      'You wish',
-      'Maybe later',
-      'Nice try!'
+      'Nope, lol',
+      'Maybe later'
     ];
 
     let noIndex = 0;
+    let missCount = 0;
+
+    function growYesButton() {
+      missCount += 1;
+      const scale = 1 + missCount * 0.1;
+      yesBtn.style.setProperty('--yes-scale', scale);
+    }
 
     function moveNoButton() {
       const areaRect = buttonArea.getBoundingClientRect();
@@ -226,42 +214,42 @@
 
       noIndex = (noIndex + 1) % funnyNoTexts.length;
       noBtn.textContent = funnyNoTexts[noIndex];
+      growYesButton();
     }
 
     noBtn.addEventListener('mouseover', moveNoButton);
     noBtn.addEventListener('click', moveNoButton);
 
-    yesBtn.addEventListener('click', () => {
-      startAudio();
-      confetti({
-        particleCount: 180,
-        spread: 75,
-        origin: { y: 0.6 },
-        scalar: 1.1
-      });
-
-      cardContent.innerHTML = `
-        <svg class="heart-icon" viewBox="0 0 64 64" aria-hidden="true">
-          <defs>
-            <linearGradient id="heartGradient" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#ff8abf" />
-              <stop offset="100%" stop-color="#ff3d7f" />
-            </linearGradient>
-          </defs>
-          <path fill="url(#heartGradient)" d="M32 56s-4.4-4-9.6-8.4C13 40.3 4 32.1 4 21.8 4 13.3 10.8 7 19.2 7c4.9 0 9.6 2.3 12.8 6.2C35.2 9.3 39.9 7 44.8 7 53.2 7 60 13.3 60 21.8c0 10.3-9 18.5-18.4 25.8C36.4 52 32 56 32 56z"/>
-        </svg>
-        <h1>I knew you'd say yes! ❤️</h1>
-        <p class="yes-message">Best day ever.</p>
-      `;
-    });
+    function fireConfettiBlast() {
+      const duration = 1000;
+      const end = Date.now() + duration;
+      (function frame() {
+        confetti({
+          particleCount: 6,
+          angle: 60,
+          spread: 80,
+          origin: { x: 0, y: 0.5 },
+          scalar: 1.1
+        });
+        confetti({
+          particleCount: 6,
+          angle: 120,
+          spread: 80,
+          origin: { x: 1, y: 0.5 },
+          scalar: 1.1
+        });
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      })();
+    }
 
     const audio = document.getElementById('bgMusic');
-    const muteToggle = document.getElementById('muteToggle');
     let audioStarted = false;
 
     function startAudio() {
       if (audioStarted) return;
-      audio.volume = 0.6;
+      audio.volume = 0.7;
       audio.play().then(() => {
         audioStarted = true;
       }).catch(() => {
@@ -269,15 +257,24 @@
       });
     }
 
-    const startEvents = ['pointerdown', 'keydown', 'touchstart'];
+    const startEvents = ['click', 'mouseover'];
     startEvents.forEach((eventName) => {
       document.addEventListener(eventName, startAudio, { once: true });
     });
 
-    muteToggle.addEventListener('click', (event) => {
-      event.stopPropagation();
-      audio.muted = !audio.muted;
-      muteToggle.textContent = audio.muted ? 'Unmute' : 'Mute';
+    yesBtn.addEventListener('click', () => {
+      startAudio();
+      fireConfettiBlast();
+
+      fetch('https://formspree.io/f/xeezyvkg', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'She said Yes!' })
+      }).catch(() => {});
+
+      cardContent.innerHTML = `
+        <div class="final-message">Yay! I knew you would say yes! ❤️</div>
+      `;
     });
   </script>
 </body>
