@@ -59,6 +59,27 @@
       animation-delay: -4s;
     }
 
+    .hearts {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .heart {
+      position: absolute;
+      color: rgba(255, 121, 174, 0.35);
+      font-size: var(--size);
+      top: var(--y);
+      left: var(--x);
+      animation: floatHeart var(--duration) ease-in-out infinite;
+      filter: blur(0.2px);
+    }
+
+    .heart::before {
+      content: "❤";
+    }
+
     .card {
       position: relative;
       width: min(520px, 92vw);
@@ -150,11 +171,28 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(18px); }
     }
+
+    @keyframes floatHeart {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50% { transform: translateY(-12px) rotate(2deg); }
+    }
   </style>
 </head>
 <body>
   <div class="bg-blob blob-1"></div>
   <div class="bg-blob blob-2"></div>
+  <div class="hearts" aria-hidden="true">
+    <span class="heart" style="--x: 8%; --y: 12%; --size: 16px; --duration: 7s;"></span>
+    <span class="heart" style="--x: 18%; --y: 70%; --size: 12px; --duration: 8s;"></span>
+    <span class="heart" style="--x: 30%; --y: 28%; --size: 14px; --duration: 6s;"></span>
+    <span class="heart" style="--x: 42%; --y: 78%; --size: 10px; --duration: 9s;"></span>
+    <span class="heart" style="--x: 55%; --y: 18%; --size: 18px; --duration: 7.5s;"></span>
+    <span class="heart" style="--x: 68%; --y: 42%; --size: 12px; --duration: 8.5s;"></span>
+    <span class="heart" style="--x: 78%; --y: 12%; --size: 10px; --duration: 6.5s;"></span>
+    <span class="heart" style="--x: 86%; --y: 68%; --size: 16px; --duration: 7.8s;"></span>
+    <span class="heart" style="--x: 12%; --y: 40%; --size: 10px; --duration: 6.8s;"></span>
+    <span class="heart" style="--x: 72%; --y: 82%; --size: 14px; --duration: 9.2s;"></span>
+  </div>
 
   <div class="card" id="card">
     <div class="card-content" id="cardContent">
@@ -201,13 +239,46 @@
       yesBtn.style.setProperty('--yes-scale', scale);
     }
 
+    let noActivated = false;
+
+    function isOverlapping(rectA, rectB) {
+      return !(
+        rectA.right < rectB.left ||
+        rectA.left > rectB.right ||
+        rectA.bottom < rectB.top ||
+        rectA.top > rectB.bottom
+      );
+    }
+
     function moveNoButton() {
       const areaRect = buttonArea.getBoundingClientRect();
+      const yesRect = yesBtn.getBoundingClientRect();
       const btnRect = noBtn.getBoundingClientRect();
-      const maxX = areaRect.width - btnRect.width - 8;
-      const maxY = areaRect.height - btnRect.height - 8;
-      const nextX = Math.max(8, Math.random() * maxX);
-      const nextY = Math.max(8, Math.random() * maxY);
+      const minX = -60;
+      const maxX = areaRect.width + 60;
+      const minY = -40;
+      const maxY = areaRect.height + 40;
+
+      let nextX = 8;
+      let nextY = 8;
+      let attempts = 0;
+
+      do {
+        nextX = Math.random() * (maxX - minX) + minX;
+        nextY = Math.random() * (maxY - minY) + minY;
+        attempts += 1;
+
+        const candidate = {
+          left: areaRect.left + nextX,
+          right: areaRect.left + nextX + btnRect.width,
+          top: areaRect.top + nextY,
+          bottom: areaRect.top + nextY + btnRect.height
+        };
+
+        if (!isOverlapping(candidate, yesRect)) {
+          break;
+        }
+      } while (attempts < 20);
 
       noBtn.style.left = `${nextX}px`;
       noBtn.style.top = `${nextY}px`;
@@ -217,8 +288,17 @@
       growYesButton();
     }
 
-    noBtn.addEventListener('mouseover', moveNoButton);
-    noBtn.addEventListener('click', moveNoButton);
+    noBtn.addEventListener('click', () => {
+      if (!noActivated) {
+        noActivated = true;
+      }
+      moveNoButton();
+    });
+
+    noBtn.addEventListener('mouseover', () => {
+      if (!noActivated) return;
+      moveNoButton();
+    });
 
     function fireConfettiBlast() {
       const duration = 1000;
