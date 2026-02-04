@@ -188,7 +188,7 @@
     <button class="mute-btn" id="muteToggle">Mute</button>
   </div>
 
-  <audio id="bgMusic" preload="auto" style="display: none;">
+  <audio id="bgMusic" preload="auto" playsinline loop style="display: none;">
     <source src="pushing-it-down.mp3" type="audio/mpeg" />
   </audio>
 
@@ -232,6 +232,7 @@
     noBtn.addEventListener('click', moveNoButton);
 
     yesBtn.addEventListener('click', () => {
+      startAudio();
       confetti({
         particleCount: 180,
         spread: 75,
@@ -268,19 +269,9 @@
       });
     }
 
-    function removeAudioListeners() {
-      document.removeEventListener('click', startAudio);
-      document.removeEventListener('mousemove', startAudio);
-    }
-
-    document.addEventListener('click', () => {
-      startAudio();
-      if (audioStarted) removeAudioListeners();
-    });
-
-    document.addEventListener('mousemove', () => {
-      startAudio();
-      if (audioStarted) removeAudioListeners();
+    const startEvents = ['pointerdown', 'keydown', 'touchstart'];
+    startEvents.forEach((eventName) => {
+      document.addEventListener(eventName, startAudio, { once: true });
     });
 
     muteToggle.addEventListener('click', (event) => {
